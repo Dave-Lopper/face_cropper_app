@@ -10,12 +10,11 @@ def auth_decorator(function):
         function [function]: the function (blueprint endpoint) to be checked
     """
     def wrapper(*args, **kwargs):
-        print("RAN")
         key = request.headers.get('x-api-key')
         if key is None:
             return ("No API key provided", 401)
-            print("TOTO")
         if key != os.environ["API_KEY"]:
+            print(key, os.environ["API_KEY"])
             return ("Bad API key provided", 401)
         return function(*args, **kwargs)
     wrapper.__name__ = function.__name__
