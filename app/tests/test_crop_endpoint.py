@@ -1,8 +1,13 @@
+import os
+
 from .utils import mock_file
 
 
 def test_crop_endpoint_returns_400_when_no_file_is_provided(client):
-    response = client.post("/crop_largest_face")
+    response = client.post(
+        "/crop_largest_face",
+        headers={"x-api-key": os.environ["API_KEY"]},
+    )
     assert response.status_code == 400
     assert "Missing image to crop" in response.data.decode("utf-8")
 
@@ -10,6 +15,7 @@ def test_crop_endpoint_returns_400_when_no_file_is_provided(client):
 def test_crop_endpoint_returns_200_when_file_is_provided(client):
     response = client.post(
         "/crop_largest_face",
+        headers={"x-api-key": os.environ["API_KEY"]},
         data={"image": mock_file("child.jpeg")},
         content_type='multipart/form-data'
     )
@@ -19,6 +25,7 @@ def test_crop_endpoint_returns_200_when_file_is_provided(client):
 def test_crop_endpoint_returns_attachement_if_param_is_provided(client):
     response = client.post(
         "/crop_largest_face",
+        headers={"x-api-key": os.environ["API_KEY"]},
         data={"image": mock_file("child.jpeg"), "attachment": "true"},
         content_type='multipart/form-data'
     )
@@ -31,6 +38,7 @@ def test_crop_endpoint_doesnt_return_attachement_param_is_absent_or_false(
         client):
     response = client.post(
         "/crop_largest_face",
+        headers={"x-api-key": os.environ["API_KEY"]},
         data={"image": mock_file("child.jpeg"), "attachment": "false"},
         content_type='multipart/form-data'
     )
@@ -41,6 +49,7 @@ def test_crop_endpoint_doesnt_return_attachement_param_is_absent_or_false(
 def test_crop_endpoint_returns_422_when_no_face_is_found(client):
     response = client.post(
         "/crop_largest_face",
+        headers={"x-api-key": os.environ["API_KEY"]},
         data={"image": mock_file("no_face.jpeg")},
         content_type='multipart/form-data'
     )
@@ -52,6 +61,7 @@ def test_crop_endpoint_returns_422_when_no_face_is_found(client):
 def test_crop_endpoint_returns_422_when_face_is_above_threshold(client):
     response = client.post(
         "/crop_largest_face",
+        headers={"x-api-key": os.environ["API_KEY"]},
         data={"image": mock_file("above_threshold.jpg")},
         content_type='multipart/form-data'
     )

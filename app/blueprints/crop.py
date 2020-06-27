@@ -7,10 +7,14 @@ from face_cropper import crop
 from face_cropper.exceptions import NoFaceException, AboveThresholdException
 from flask import Blueprint, request, send_file
 
+from ..decorators import auth_decorator
+
+
 crop_blueprint = Blueprint("crop", __name__)
 
 
 @crop_blueprint.route("/crop_largest_face", methods=["POST"])
+@auth_decorator
 def crop_largest_face():
     if "image" not in request.files:
         return ("Missing image to crop", 400)
