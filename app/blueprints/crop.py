@@ -1,3 +1,4 @@
+import base64
 import os
 from tempfile import gettempdir
 from uuid import uuid4
@@ -35,19 +36,23 @@ def crop_largest_face():
                 422
             )
 
+    if "b64" in request.form and request.form["b64"].lower() == "true":
+        cropped_image = open(
+            f"{temp_location}/{temp_filename}_cropped{extension}", "rb"
+        )
+        return base64.b64encode(cropped_image.read())
     if "attachment" not in request.form or \
             request.form["attachment"].lower() == "false":
-        response = send_file(
+        return send_file(
             f"{temp_location}/{temp_filename}_cropped{extension}",
             # Remove "." in file ext
             mimetype=f"image/{extension[1:]}",
         )
     else:
-        response = send_file(
+        return send_file(
             f"{temp_location}/{temp_filename}_cropped{extension}",
             # Remove "." in file ext
             mimetype=f"image/{extension[1:]}",
             as_attachment=True,
             attachment_filename=f"{original_filename}_cropped{extension}"
         )
-    return response

@@ -1,4 +1,5 @@
 Flask==1.1.2
+Flask-Cors==3.0.8
 face-cropper==1.0.0
 Pillow==7.1.2
 python-dotenv==0.13.0
